@@ -263,8 +263,8 @@ func main() {
 	// Level 5: Auth
 	mux.HandleFunc("POST /auth/token", authToken)
 
-	// Books (GET /books is protected via auth middleware)
-	mux.HandleFunc("GET /books", authMiddleware(getBooks))
+	// Books
+	mux.HandleFunc("GET /books", getBooks)
 	mux.HandleFunc("POST /books", createBook)
 	mux.HandleFunc("GET /books/{id}", getBook)
 	mux.HandleFunc("PUT /books/{id}", updateBook)
