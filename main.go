@@ -70,7 +70,7 @@ func authMiddleware(next http.HandlerFunc) http.HandlerFunc {
 // --- Level 1: Ping ---
 
 func ping(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, http.StatusOK, map[string]string{"message": "pong"})
+	writeJSON(w, http.StatusOK, map[string]string{"suceess": "true"})
 }
 
 // --- Level 2: Echo ---
