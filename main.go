@@ -37,9 +37,14 @@ var db = &Store{
 // --- Helpers ---
 
 func writeJSON(w http.ResponseWriter, status int, v any) {
+	data, err := json.Marshal(v)
+	if err != nil {
+		http.Error(w, "internal error", http.StatusInternalServerError)
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(v)
+	w.Write(data)
 }
 
 func decodeJSON(r *http.Request, v any) error {
@@ -76,7 +81,7 @@ func ping(w http.ResponseWriter, r *http.Request) {
 // --- Level 2: Echo ---
 
 func echo(w http.ResponseWriter, r *http.Request) {
-	var body map[string]any
+	var body json.RawMessage
 	if err := decodeJSON(r, &body); err != nil {
 		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid JSON"})
 		return
