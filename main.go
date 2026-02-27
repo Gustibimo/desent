@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -128,12 +129,7 @@ func getBooks(w http.ResponseWriter, r *http.Request) {
 	}
 	db.mu.RUnlock()
 
-	// Sort by ID for consistent ordering
-	for i := 1; i < len(result); i++ {
-		for j := i; j > 0 && result[j].ID < result[j-1].ID; j-- {
-			result[j], result[j-1] = result[j-1], result[j]
-		}
-	}
+	sort.Slice(result, func(i, j int) bool { return result[i].ID < result[j].ID })
 
 	// Pagination
 	if pageStr != "" && limitStr != "" {
