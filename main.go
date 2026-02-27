@@ -187,7 +187,7 @@ func createBook(w http.ResponseWriter, r *http.Request) {
 func getBook(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+		writeJSON(w, http.StatusNotFound, map[string]string{"error": "book not found"})
 		return
 	}
 
@@ -207,7 +207,7 @@ func getBook(w http.ResponseWriter, r *http.Request) {
 func updateBook(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+		writeJSON(w, http.StatusNotFound, map[string]string{"error": "book not found"})
 		return
 	}
 
@@ -244,7 +244,7 @@ func updateBook(w http.ResponseWriter, r *http.Request) {
 func deleteBook(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
-		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+		writeJSON(w, http.StatusNotFound, map[string]string{"error": "book not found"})
 		return
 	}
 
