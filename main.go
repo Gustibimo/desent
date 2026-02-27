@@ -92,6 +92,18 @@ func echo(w http.ResponseWriter, r *http.Request) {
 // --- Level 5: Auth Token ---
 
 func authToken(w http.ResponseWriter, r *http.Request) {
+	var creds struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	if err := decodeJSON(r, &creds); err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid JSON"})
+		return
+	}
+	if creds.Username != "admin" || creds.Password != "password" {
+		writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "invalid credentials"})
+		return
+	}
 	token := fmt.Sprintf("%016x", rand.Int63())
 	db.mu.Lock()
 	db.tokens[token] = struct{}{}
@@ -263,8 +275,8 @@ func main() {
 	// Level 5: Auth
 	mux.HandleFunc("POST /auth/token", authToken)
 
-	// Books
-	mux.HandleFunc("GET /books", getBooks)
+	// Books (GET /books protected)
+	mux.HandleFunc("GET /books", authMiddleware(getBooks))
 	mux.HandleFunc("POST /books", createBook)
 	mux.HandleFunc("GET /books/{id}", getBook)
 	mux.HandleFunc("PUT /books/{id}", updateBook)
